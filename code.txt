@@ -1,0 +1,41 @@
+#! /bin/sh
+
+--to intall the smtp server
+yum install postfix
+
+-- to check the postfix is installed  properly
+
+if [$? == 0 ]
+
+then 
+echo "installation completed"
+else
+echo "problem in installation"
+
+--copying the configuration file which we edited already to postfix location
+
+cp /home/main.cf /etc/potsfix/main.cf
+
+
+
+/*
+scritp to check the smtp server is running or not 
+#! /bin/sh
+count ='telnet praba.com 25 |grep -i connected | wc -l'
+ if [ count =1]
+then 
+echo "mail server is runnin'
+else 
+sudo serivce postfix restart
+fi
+*\
+
+--coping the script to home location 
+sed -n '23,30p' /home/deploying_smtp_server.sh > /home/smtp_server_running_check.sh
+
+ --creating a cron entry 
+echo "*/5 * * * * /home/smtp_server_running_check.sh" | tee -a /var/cron/root 
+
+--to restart the cron 
+
+sudo restart crontab
